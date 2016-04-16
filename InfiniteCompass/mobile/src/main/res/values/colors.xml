@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <!--
+    used this page to find opposite colors: http://www.sessions.edu/color-calculator
+    used this page for the android color palette: https://www.google.com/design/spec/style/color.html#color-color-palette
+    used this page for the DE2000 color distance algorithm: http://colormine.org/delta-e-calculator/cie2000
+    -->
+
+    <!--"purple: 400" the closest android color to the opposite of the infinite campus primary color: #92c83e-->
+    <color name="colorPrimary">#AB47BC</color>
+    <!--"purple: 600" two "android colors" darker than the primary color-->
+    <color name="colorPrimaryDark">#8E24AA</color>
+    <!--"cyan: 300" the closest android color to the opposite of the infinite campus accent color: #f26126-->
+    <color name="colorAccent">#4DD0E1</color>
 </resources>

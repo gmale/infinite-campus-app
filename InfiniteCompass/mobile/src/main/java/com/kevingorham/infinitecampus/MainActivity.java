@@ -2,9 +2,8 @@ package com.kevingorham.infinitecampus;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -12,27 +11,36 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+
+import com.kevingorham.infinitecampus.util.Toaster;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnEditorAction;
+import butterknife.OnTouch;
 
 public class MainActivity extends AppCompatActivity
 		implements NavigationView.OnNavigationItemSelectedListener {
+
+	@Bind(R.id.search_district)
+	EditText searchDistrictEditText;
+
+	@Bind(R.id.fab)
+	FloatingActionButton fab;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		ButterKnife.bind(this);
+
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
-
-		FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-		fab.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-//				if (new Library().someLibraryMethod()) {
-					Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-							.setAction("Action", null).show();
-//				}
-			}
-		});
 
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 		ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -100,5 +108,44 @@ public class MainActivity extends AppCompatActivity
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawer.closeDrawer(GravityCompat.START);
 		return true;
+	}
+
+	@OnTouch(R.id.search_district)
+	public boolean onSearchDistrictTouch(EditText searchEditText, MotionEvent motionEvent) {
+		final int DRAWABLE_RIGHT = 2;
+		if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+			if(motionEvent.getX() >=
+					(searchEditText.getRight() - searchEditText.getPaddingRight() - searchEditText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+//				Toaster.show(this, "eventX: %d\ntextRight: %d\npadRight: %d\nwidth: %d", Math.round(motionEvent.getX()), searchEditText.getRight(), searchEditText.getPaddingRight(), searchEditText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width());
+				onSearchDistrict();
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@OnEditorAction(R.id.search_district)
+	public boolean onSearchDistrictEditorAction(int actionId) {
+		if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+			onSearchDistrict();
+			return true;
+		}
+		return false;
+	}
+
+	@OnClick(R.id.fab)
+	public void onFabClick(View view) {
+		Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+				.setAction("Action", null).show();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		fab.requestFocus();
+	}
+
+	private void onSearchDistrict() {
+		Toaster.show(this, "Searched for %s", searchDistrictEditText.getText());
 	}
 }

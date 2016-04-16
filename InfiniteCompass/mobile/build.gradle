@@ -30,7 +30,11 @@ dependencies {
     compile "com.android.support:appcompat-v7:${supportLibraryVersion}"
     compile "com.android.support:support-v4:${supportLibraryVersion}"
     compile "com.android.support:design:${supportLibraryVersion}"
+    compile "com.android.support:percent:${supportLibraryVersion}"
+
+    // square/JW dependencies
+    compile 'com.jakewharton:butterknife:7.0.1'
 
     // in-house dependencies
-//    compile 'com.kevingorham.infinitecampus:infinite-campus-api:0.0.2'
+//    compile 'com.kevingorham.infinitecampus:infinite-campus-api:0.0.6'
 }
