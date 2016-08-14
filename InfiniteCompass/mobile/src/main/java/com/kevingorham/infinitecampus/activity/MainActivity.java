@@ -1,4 +1,4 @@
-package com.kevingorham.infinitecampus;
+package com.kevingorham.infinitecampus.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -15,7 +15,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.TextView;
 
+import com.google.gson.GsonBuilder;
+import com.kevingorham.infinitecampus.R;
+import com.kevingorham.infinitecampus.factory.ApiFactory;
+import com.kevingorham.infinitecampus.model.District;
+import com.kevingorham.infinitecampus.service.InfiniteCampusJsonApi;
 import com.kevingorham.infinitecampus.util.Toaster;
 
 import butterknife.Bind;
@@ -23,12 +29,18 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnEditorAction;
 import butterknife.OnTouch;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity
 		implements NavigationView.OnNavigationItemSelectedListener {
 
 	@Bind(R.id.search_district)
 	EditText searchDistrictEditText;
+
+	@Bind(R.id.district_results)
+	TextView districtResults;
 
 	@Bind(R.id.fab)
 	FloatingActionButton fab;
@@ -146,6 +158,22 @@ public class MainActivity extends AppCompatActivity
 	}
 
 	private void onSearchDistrict() {
-		Toaster.show(this, "Searched for %s", searchDistrictEditText.getText());
+		ApiFactory factory = new ApiFactory();
+		InfiniteCampusJsonApi infiniteCampusJsonApi = factory.createInfiniteCampusJsonApi();
+		infiniteCampusJsonApi.getDistrict(searchDistrictEditText.getText().toString()).enqueue(new Callback<District>() {
+
+			@Override
+			public void onResponse(Call<District> call, Response<District> response) {
+				District district = response.body();
+				String prettyDistrict = new GsonBuilder().setPrettyPrinting().create().toJson
+						(district);
+				districtResults.setText(prettyDistrict);
+			}
+
+			@Override
+			public void onFailure(Call<District> call, Throwable t) {
+				Toaster.show(MainActivity.this, "Request failed");
+			}
+		});
 	}
 }
